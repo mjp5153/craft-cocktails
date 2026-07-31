@@ -83,6 +83,13 @@ Run JVM unit tests:
 
 ---
 
+## 💸Contribute to the developer
+
+Craft Cocktail is open and free to use! If this app helped you mix a great drink, consider supporting future features and updates.
+
+PayPal link: https://www.paypal.com/donate/?business=U265W7M8EPXTJ&no_recurring=0&item_name=Help+fund+the+Craft+Cocktails+app&currency_code=USD
+
+
 ## 📄 License
 
 ```
