@@ -83,7 +83,7 @@ Run JVM unit tests:
 
 ---
 
-## 💸Contribute to the developer
+## 💸 Contribute to the developer
 
 Craft Cocktail is open and free to use! If this app helped you mix a great drink, consider supporting future features and updates.
 
