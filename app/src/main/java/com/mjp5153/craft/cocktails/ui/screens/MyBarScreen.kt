@@ -105,7 +105,7 @@ fun MyBarScreen(
                     )
                     Spacer(modifier = Modifier.height(2.dp))
                     Text(
-                        text = "$inBarCount ingredients in bar • $readyCount mjp5153 ready",
+                        text = "$inBarCount ingredients in bar • $readyCount cocktails ready",
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.8f)
                     )
