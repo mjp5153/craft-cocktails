@@ -12,6 +12,7 @@ plugins {
 android {
   namespace = "com.mjp5153.craft.cocktails"
   compileSdk { version = release(37) { minorApiLevel = 1 } }
+  ndkVersion = "30.0.16138531"
 
   defaultConfig {
     applicationId = "com.mjp5153.craft.cocktails"
@@ -20,6 +21,7 @@ android {
     versionCode = 5
     versionName = "1.0.4"
 
+    ndk.debugSymbolLevel = "SYMBOL_TABLE"
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
   }
 
@@ -45,14 +47,17 @@ android {
         enable = true
       }
       // Includes native debug symbols in the Android App Bundle
-      ndk.debugSymbolLevel = "FULL"
+      ndk.debugSymbolLevel = "SYMBOL_TABLE"
       isCrunchPngs = false
       isMinifyEnabled = true
       isShrinkResources = true
       proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
       signingConfig = signingConfigs.getByName("release")
     }
-    debug { signingConfig = signingConfigs.getByName("debugConfig") }
+    debug {
+      ndk.debugSymbolLevel = "SYMBOL_TABLE"
+      signingConfig = signingConfigs.getByName("debugConfig")
+    }
   }
   compileOptions {
     sourceCompatibility = JavaVersion.VERSION_11
