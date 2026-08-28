@@ -17,8 +17,8 @@ android {
     applicationId = "com.mjp5153.craft.cocktails"
     minSdk = 24
     targetSdk = 37
-    versionCode = 3
-    versionName = "1.0.2"
+    versionCode = 5
+    versionName = "1.0.4"
 
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
   }
@@ -44,6 +44,8 @@ android {
       optimization {
         enable = true
       }
+      // Includes native debug symbols in the Android App Bundle
+      ndk.debugSymbolLevel = "FULL"
       isCrunchPngs = false
       isMinifyEnabled = true
       isShrinkResources = true
