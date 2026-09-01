@@ -8,10 +8,13 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
@@ -35,8 +38,8 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -217,12 +220,14 @@ fun RecipeDetailScreen(
                     }
                 )
             }
-        }
+        },
+        contentWindowInsets = WindowInsets.safeDrawing
     ) { innerPadding ->
         Column(
             modifier = modifier
                 .fillMaxSize()
                 .padding(innerPadding)
+                .consumeWindowInsets(innerPadding)
                 .background(MaterialTheme.colorScheme.background)
                 .verticalScroll(rememberScrollState())
                 .padding(16.dp)
@@ -559,10 +564,10 @@ fun RecipeDetailScreen(
                         }
 
                         if (index < recipeMatch.ingredients.lastIndex) {
-                            Divider(
-                                color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f),
+                            HorizontalDivider(
+                                modifier = Modifier.padding(vertical = 4.dp),
                                 thickness = 0.5.dp,
-                                modifier = Modifier.padding(vertical = 4.dp)
+                                color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
                             )
                         }
                     }
@@ -616,9 +621,10 @@ fun RecipeDetailScreen(
                         }
 
                         if (stepIdx < instructionSteps.lastIndex) {
-                            Divider(
-                                color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.4f),
-                                thickness = 0.5.dp
+                            HorizontalDivider(
+                                Modifier,
+                                thickness = 0.5.dp,
+                                color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.4f)
                             )
                         }
                     }

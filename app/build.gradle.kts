@@ -18,8 +18,8 @@ android {
     applicationId = "com.mjp5153.craft.cocktails"
     minSdk = 24
     targetSdk = 37
-    versionCode = 5
-    versionName = "1.0.4"
+    versionCode = 7
+    versionName = "1.1.0"
 
     ndk.debugSymbolLevel = "SYMBOL_TABLE"
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -97,6 +97,7 @@ dependencies {
   implementation(libs.androidx.compose.ui.graphics)
   implementation(libs.androidx.compose.ui.tooling.preview)
   implementation(libs.androidx.core.ktx)
+  implementation(libs.androidx.fragment)
   // implementation(libs.androidx.datastore.preferences)
   implementation(libs.androidx.lifecycle.runtime.compose)
   implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -106,7 +107,6 @@ dependencies {
   implementation(libs.androidx.room.runtime)
   // implementation(libs.coil.compose)
   implementation(libs.converter.moshi)
-  implementation(libs.firebase.ai)
   // Uncomment to use Firestore:
   // implementation(libs.firebase.firestore)
 
@@ -116,7 +116,10 @@ dependencies {
   // implementation(libs.androidx.credentials)
   // implementation(libs.androidx.credentials.play.services)
   // implementation(libs.googleid)
+  implementation(libs.material)
+  implementation(libs.firebase.appcheck)
   implementation(libs.firebase.appcheck.recaptcha)
+  implementation(libs.firebase.common)
   implementation(libs.kotlinx.coroutines.android)
   implementation(libs.kotlinx.coroutines.core)
   implementation(libs.logging.interceptor)

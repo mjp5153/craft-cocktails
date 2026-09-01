@@ -5,7 +5,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocalBar
 import androidx.compose.material.icons.filled.MenuBook
@@ -53,8 +52,13 @@ import com.mjp5153.craft.cocktails.ui.theme.CraftCocktailTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        super.onCreate(savedInstanceState)
+        
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+            window.isNavigationBarContrastEnforced = false
+        }
+
         setContent {
             CraftCocktailTheme {
                 CocktailApp()
@@ -148,11 +152,12 @@ fun CocktailApp() {
         NavHost(
             navController = navController,
             startDestination = "my_bar",
-            modifier = Modifier.padding(innerPadding)
+            modifier = Modifier.fillMaxSize()
         ) {
             composable("my_bar") {
                 MyBarScreen(
                     viewModel = viewModel,
+                    innerPadding = innerPadding,
                     onNavigateToRecommendations = {
                         viewModel.onRecipeTabSelect(RecipeTab.RECOMMENDED)
                         navController.navigate("recipes") {
@@ -172,6 +177,7 @@ fun CocktailApp() {
             composable("recipes") {
                 RecipesScreen(
                     viewModel = viewModel,
+                    innerPadding = innerPadding,
                     onSelectRecipe = { recipeId ->
                         navController.navigate("recipe_detail/$recipeId")
                     },
