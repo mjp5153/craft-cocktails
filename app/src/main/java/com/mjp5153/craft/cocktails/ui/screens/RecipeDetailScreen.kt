@@ -64,6 +64,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mjp5153.craft.cocktails.data.model.RecipeWithMatch
 import com.mjp5153.craft.cocktails.ui.CocktailViewModel
@@ -185,6 +186,7 @@ fun RecipeDetailScreen(
             if (showDeleteDialog) {
                 AlertDialog(
                     onDismissRequest = { showDeleteDialog = false },
+                    properties = DialogProperties(decorFitsSystemWindows = false),
                     title = {
                         Text(
                             text = "Delete Custom Recipe?",

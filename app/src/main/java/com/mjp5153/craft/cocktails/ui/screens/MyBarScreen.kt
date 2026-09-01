@@ -56,11 +56,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.mjp5153.craft.cocktails.R
 import com.mjp5153.craft.cocktails.data.local.IngredientEntity
 import com.mjp5153.craft.cocktails.data.model.IngredientCategories
 import com.mjp5153.craft.cocktails.ui.CocktailViewModel
@@ -114,7 +116,7 @@ fun MyBarScreen(
                     )
                     Spacer(modifier = Modifier.height(2.dp))
                     Text(
-                        text = "$inBarCount ingredients in bar • $readyCount cocktails ready",
+                        text = "${pluralStringResource(R.plurals.ingredients_in_bar, inBarCount, inBarCount)} • ${pluralStringResource(R.plurals.cocktails_ready, readyCount, readyCount)}",
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.8f)
                     )

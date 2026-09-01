@@ -72,6 +72,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mjp5153.craft.cocktails.data.model.MatchFilter
 import com.mjp5153.craft.cocktails.data.model.RecipeWithMatch
@@ -329,6 +330,7 @@ fun RecipesScreen(
         recipeToDelete?.let { item ->
             AlertDialog(
                 onDismissRequest = { recipeToDelete = null },
+                properties = DialogProperties(decorFitsSystemWindows = false),
                 title = {
                     Text(text = "Delete Custom Recipe?", fontWeight = FontWeight.Bold)
                 },

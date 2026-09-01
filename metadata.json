@@ -1,5 +1,5 @@
 {
-  "name": "Craft Cocktail",
+  "name": "Craft Cocktails",
   "description": "Discover cocktail recipes based on ingredients in your house, create custom recipes, and share drinks.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]

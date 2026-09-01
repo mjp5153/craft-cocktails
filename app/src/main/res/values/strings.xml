@@ -1,3 +1,14 @@
 <resources>
-    <string name="app_name">Craft Cocktail</string>
+    <string name="app_name">Craft Cocktails</string>
+
+    <plurals name="ingredients_in_bar">
+        <item quantity="one">%d ingredient in bar</item>
+        <item quantity="other">%d ingredients in bar</item>
+    </plurals>
+
+    <plurals name="cocktails_ready">
+        <item quantity="one">%d cocktail ready</item>
+        <item quantity="other">%d cocktails ready</item>
+    </plurals>
 </resources>
+
