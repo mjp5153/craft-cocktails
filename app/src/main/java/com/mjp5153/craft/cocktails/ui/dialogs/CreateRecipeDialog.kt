@@ -77,6 +77,8 @@ fun CreateRecipeDialog(
     var garnish by remember { mutableStateOf(existingRecipe?.garnish ?: "Orange Twist") }
     var instructions by remember { mutableStateOf(existingRecipe?.instructions ?: "") }
 
+    var nameError by remember { mutableStateOf<String?>(null) }
+    var instructionsError by remember { mutableStateOf<String?>(null) }
     var errorMessage by remember { mutableStateOf<String?>(null) }
     var showDeleteConfirm by remember { mutableStateOf(false) }
 
@@ -157,12 +159,17 @@ fun CreateRecipeDialog(
 
                     OutlinedTextField(
                         value = name,
-                        onValueChange = { name = it },
+                        onValueChange = {
+                            name = it
+                            nameError = null
+                        },
                         label = { Text("Cocktail Name *") },
                         modifier = Modifier
                             .fillMaxWidth()
                             .testTag("input_recipe_name"),
-                        singleLine = true
+                        singleLine = true,
+                        isError = nameError != null,
+                        supportingText = nameError?.let { { Text(it) } }
                     )
 
                     Spacer(modifier = Modifier.height(10.dp))
@@ -308,14 +315,19 @@ fun CreateRecipeDialog(
 
                     OutlinedTextField(
                         value = instructions,
-                        onValueChange = { instructions = it },
+                        onValueChange = {
+                            instructions = it
+                            instructionsError = null
+                        },
                         label = { Text("Step-by-step Instructions *") },
                         placeholder = { Text("1. Combine in shaker with ice.\n2. Shake hard for 15s.\n3. Strain into glass.") },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(130.dp)
+                            .height(200.dp)
                             .imePadding()
-                            .testTag("input_recipe_instructions")
+                            .testTag("input_recipe_instructions"),
+                        isError = instructionsError != null,
+                        supportingText = instructionsError?.let { { Text(it) } }
                     )
                 }
 
@@ -354,13 +366,14 @@ fun CreateRecipeDialog(
                         Spacer(modifier = Modifier.width(8.dp))
                         Button(
                             onClick = {
+                                var hasError = false
                                 if (name.isBlank()) {
-                                    errorMessage = "Please enter a cocktail name."
-                                    return@Button
+                                    nameError = "Please enter a cocktail name."
+                                    hasError = true
                                 }
                                 if (instructions.isBlank()) {
-                                    errorMessage = "Please enter step-by-step instructions."
-                                    return@Button
+                                    instructionsError = "Please enter step-by-step instructions."
+                                    hasError = true
                                 }
 
                                 val inputs = ingredientRows
@@ -376,8 +389,12 @@ fun CreateRecipeDialog(
 
                                 if (inputs.isEmpty()) {
                                     errorMessage = "Please add at least one ingredient."
-                                    return@Button
+                                    hasError = true
+                                } else {
+                                    errorMessage = null
                                 }
+
+                                if (hasError) return@Button
 
                                 if (isEditing && recipeToEdit != null) {
                                     viewModel.updateCustomRecipe(

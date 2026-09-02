@@ -6,6 +6,7 @@ import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocalBar
@@ -19,6 +20,7 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -28,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -95,70 +98,51 @@ fun CocktailApp() {
     var showTipJarDialog by remember { mutableStateOf(false) }
     var showBackupDialog by remember { mutableStateOf(false) }
 
-    Scaffold(
-        modifier = Modifier.fillMaxSize(),
-        bottomBar = {
-            // Only show bottom navigation on main tabs
-            if (currentRoute == "my_bar" || currentRoute == "recipes") {
-                NavigationBar(
-                    containerColor = MaterialTheme.colorScheme.surface,
-                    contentColor = MaterialTheme.colorScheme.primary
-                ) {
-                    NavigationBarItem(
-                        selected = currentRoute == "my_bar",
-                        onClick = {
-                            navController.navigate("my_bar") {
-                                popUpTo(navController.graph.findStartDestination().id) {
-                                    saveState = true
-                                }
-                                launchSingleTop = true
-                                restoreState = true
-                            }
-                        },
-                        icon = {
-                            Icon(
-                                imageVector = if (currentRoute == "my_bar") Icons.Default.LocalBar else Icons.Outlined.LocalBar,
-                                contentDescription = "My Bar"
-                            )
-                        },
-                        label = { Text("My Bar", fontSize = 12.sp, fontWeight = FontWeight.SemiBold) },
-                        colors = NavigationBarItemDefaults.colors(
-                            selectedIconColor = MaterialTheme.colorScheme.primary,
-                            selectedTextColor = MaterialTheme.colorScheme.primary,
-                            indicatorColor = MaterialTheme.colorScheme.primaryContainer
-                        ),
-                        modifier = Modifier.testTag("nav_my_bar")
+    NavigationSuiteScaffold(
+        navigationSuiteItems = {
+            item(
+                selected = currentRoute == "my_bar",
+                onClick = {
+                    navController.navigate("my_bar") {
+                        popUpTo(navController.graph.findStartDestination().id) {
+                            saveState = true
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                },
+                icon = {
+                    Icon(
+                        imageVector = if (currentRoute == "my_bar") Icons.Default.LocalBar else Icons.Outlined.LocalBar,
+                        contentDescription = "My Bar"
                     )
+                },
+                label = { Text("My Bar", fontSize = 12.sp, fontWeight = FontWeight.SemiBold) },
+                modifier = Modifier.testTag("nav_my_bar")
+            )
 
-                    NavigationBarItem(
-                        selected = currentRoute == "recipes",
-                        onClick = {
-                            navController.navigate("recipes") {
-                                popUpTo(navController.graph.findStartDestination().id) {
-                                    saveState = true
-                                }
-                                launchSingleTop = true
-                                restoreState = true
-                            }
-                        },
-                        icon = {
-                            Icon(
-                                imageVector = if (currentRoute == "recipes") Icons.Default.MenuBook else Icons.Outlined.MenuBook,
-                                contentDescription = "Recipes"
-                            )
-                        },
-                        label = { Text("Recipes", fontSize = 12.sp, fontWeight = FontWeight.SemiBold) },
-                        colors = NavigationBarItemDefaults.colors(
-                            selectedIconColor = MaterialTheme.colorScheme.primary,
-                            selectedTextColor = MaterialTheme.colorScheme.primary,
-                            indicatorColor = MaterialTheme.colorScheme.primaryContainer
-                        ),
-                        modifier = Modifier.testTag("nav_recipes")
+            item(
+                selected = currentRoute == "recipes",
+                onClick = {
+                    navController.navigate("recipes") {
+                        popUpTo(navController.graph.findStartDestination().id) {
+                            saveState = true
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                },
+                icon = {
+                    Icon(
+                        imageVector = if (currentRoute == "recipes") Icons.Default.MenuBook else Icons.Outlined.MenuBook,
+                        contentDescription = "Recipes"
                     )
-                }
-            }
+                },
+                label = { Text("Recipes", fontSize = 12.sp, fontWeight = FontWeight.SemiBold) },
+                modifier = Modifier.testTag("nav_recipes")
+            )
         }
-    ) { innerPadding ->
+    ) {
         NavHost(
             navController = navController,
             startDestination = "my_bar",
@@ -167,7 +151,7 @@ fun CocktailApp() {
             composable("my_bar") {
                 MyBarScreen(
                     viewModel = viewModel,
-                    innerPadding = innerPadding,
+                    innerPadding = PaddingValues(0.dp), // NavigationSuiteScaffold handles content padding
                     onNavigateToRecommendations = {
                         viewModel.onRecipeTabSelect(RecipeTab.RECOMMENDED)
                         navController.navigate("recipes") {
@@ -187,7 +171,7 @@ fun CocktailApp() {
             composable("recipes") {
                 RecipesScreen(
                     viewModel = viewModel,
-                    innerPadding = innerPadding,
+                    innerPadding = PaddingValues(0.dp),
                     onSelectRecipe = { recipeId ->
                         navController.navigate("recipe_detail/$recipeId")
                     },

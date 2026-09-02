@@ -110,210 +110,222 @@ fun RecipesScreen(
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
-        Column(
+        LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top))
+                .consumeWindowInsets(innerPadding)
+                .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top)),
+            contentPadding = PaddingValues(
+                bottom = innerPadding.calculateBottomPadding() + 80.dp
+            ),
+            verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             // --- Header & Tip Jar Action ---
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 8.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Column {
-                    Text(
-                        text = "Craft Cocktails",
-                        style = MaterialTheme.typography.titleLarge,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onBackground
-                    )
-                    Text(
-                        text = "Filter recipes based on your home bar",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    // Google Drive Backup / Export & Import Button
-                    IconButton(
-                        onClick = onOpenBackup,
-                        modifier = Modifier.testTag("backup_drive_button")
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.CloudUpload,
-                            contentDescription = "Google Drive Backup & Import",
-                            tint = MaterialTheme.colorScheme.primary,
-                            modifier = Modifier.size(24.dp)
+            item {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 8.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Column {
+                        Text(
+                            text = "Craft Cocktails",
+                            style = MaterialTheme.typography.titleLarge,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.onBackground
+                        )
+                        Text(
+                            text = "Filter recipes based on your home bar",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
 
-                    // Tip Jar Button ("Buy dev a cocktail")
-                    IconButton(
-                        onClick = onOpenTipJar,
-                        modifier = Modifier.testTag("tip_jar_button")
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.VolunteerActivism,
-                            contentDescription = "Buy Developer a Cocktail",
-                            tint = MaterialTheme.colorScheme.primary,
-                            modifier = Modifier.size(24.dp)
-                        )
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        // Google Drive Backup / Export & Import Button
+                        IconButton(
+                            onClick = onOpenBackup,
+                            modifier = Modifier.testTag("backup_drive_button")
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.CloudUpload,
+                                contentDescription = "Google Drive Backup & Import",
+                                tint = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.size(24.dp)
+                            )
+                        }
+
+                        // Tip Jar Button ("Buy dev a cocktail")
+                        IconButton(
+                            onClick = onOpenTipJar,
+                            modifier = Modifier.testTag("tip_jar_button")
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.VolunteerActivism,
+                                contentDescription = "Buy Developer a Cocktail",
+                                tint = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.size(24.dp)
+                            )
+                        }
                     }
                 }
             }
 
             // --- Recipe Tabs ---
-            SecondaryTabRow(
-                selectedTabIndex = selectedTab.ordinal,
-                containerColor = MaterialTheme.colorScheme.surface,
-                contentColor = MaterialTheme.colorScheme.primary,
-                indicator = {
-                    TabRowDefaults.SecondaryIndicator(
-                        modifier = Modifier.tabIndicatorOffset(
-                            selectedTabIndex = selectedTab.ordinal,
-                            matchContentSize = false
-                        ),
-                        color = MaterialTheme.colorScheme.primary
-                    )
-                }
-            ) {
-                RecipeTab.entries.forEach { tab ->
-                    Tab(
-                        selected = selectedTab == tab,
-                        onClick = { viewModel.onRecipeTabSelect(tab) },
-                        text = { Text(tab.label, fontSize = 12.sp, fontWeight = if (selectedTab == tab) FontWeight.Bold else FontWeight.Medium) },
-                        modifier = Modifier.testTag("tab_${tab.name.lowercase()}")
-                    )
+            item {
+                SecondaryTabRow(
+                    selectedTabIndex = selectedTab.ordinal,
+                    containerColor = MaterialTheme.colorScheme.surface,
+                    contentColor = MaterialTheme.colorScheme.primary,
+                    indicator = {
+                        TabRowDefaults.SecondaryIndicator(
+                            modifier = Modifier.tabIndicatorOffset(
+                                selectedTabIndex = selectedTab.ordinal,
+                                matchContentSize = false
+                            ),
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                    }
+                ) {
+                    RecipeTab.entries.forEach { tab ->
+                        Tab(
+                            selected = selectedTab == tab,
+                            onClick = { viewModel.onRecipeTabSelect(tab) },
+                            text = {
+                                Text(
+                                    text = tab.label,
+                                    fontSize = 12.sp,
+                                    fontWeight = if (selectedTab == tab) FontWeight.Bold else FontWeight.Medium,
+                                    maxLines = 1,
+                                    softWrap = false
+                                )
+                            },
+                            modifier = Modifier.testTag("tab_${tab.name.lowercase()}")
+                        )
+                    }
                 }
             }
 
             // --- Search Field ---
-            OutlinedTextField(
-                value = searchQuery,
-                onValueChange = { viewModel.onRecipeSearchQueryChange(it) },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 6.dp)
-                    .imePadding()
-                    .testTag("recipe_search_input"),
-                placeholder = { Text("Search drinks or ingredients (e.g. Margarita)...") },
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Default.Search,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                },
-                trailingIcon = {
-                    if (searchQuery.isNotEmpty()) {
-                        IconButton(onClick = { viewModel.onRecipeSearchQueryChange("") }) {
-                            Icon(imageVector = Icons.Default.Clear, contentDescription = "Clear")
+            item {
+                OutlinedTextField(
+                    value = searchQuery,
+                    onValueChange = { viewModel.onRecipeSearchQueryChange(it) },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 6.dp)
+                        .imePadding()
+                        .testTag("recipe_search_input"),
+                    placeholder = { Text("Search drinks or ingredients (e.g. Margarita)...") },
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.Default.Search,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    },
+                    trailingIcon = {
+                        if (searchQuery.isNotEmpty()) {
+                            IconButton(onClick = { viewModel.onRecipeSearchQueryChange("") }) {
+                                Icon(imageVector = Icons.Default.Clear, contentDescription = "Clear")
+                            }
                         }
-                    }
-                },
-                singleLine = true,
-                shape = RoundedCornerShape(12.dp),
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedContainerColor = MaterialTheme.colorScheme.surface,
-                    unfocusedContainerColor = MaterialTheme.colorScheme.surface,
-                    focusedBorderColor = MaterialTheme.colorScheme.primary,
-                    unfocusedBorderColor = MaterialTheme.colorScheme.outline
+                    },
+                    singleLine = true,
+                    shape = RoundedCornerShape(12.dp),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedContainerColor = MaterialTheme.colorScheme.surface,
+                        unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+                        focusedBorderColor = MaterialTheme.colorScheme.primary,
+                        unfocusedBorderColor = MaterialTheme.colorScheme.outline
+                    )
                 )
-            )
+            }
 
             // --- Base Spirit Filter Chips ---
-            LazyRow(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 2.dp)
-            ) {
-                items(BASE_SPIRIT_OPTIONS) { spirit ->
-                    val isSelected = selectedBaseSpirit == spirit
-                    FilterChip(
-                        selected = isSelected,
-                        onClick = { viewModel.onBaseSpiritSelect(spirit) },
-                        label = { Text(text = spirit, fontSize = 12.sp) },
-                        colors = FilterChipDefaults.filterChipColors(
-                            selectedContainerColor = MaterialTheme.colorScheme.primaryContainer,
-                            selectedLabelColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                            containerColor = MaterialTheme.colorScheme.surface
+            item {
+                LazyRow(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    contentPadding = PaddingValues(horizontal = 16.dp, vertical = 2.dp)
+                ) {
+                    items(BASE_SPIRIT_OPTIONS) { spirit ->
+                        val isSelected = selectedBaseSpirit == spirit
+                        FilterChip(
+                            selected = isSelected,
+                            onClick = { viewModel.onBaseSpiritSelect(spirit) },
+                            label = { Text(text = spirit, fontSize = 12.sp) },
+                            colors = FilterChipDefaults.filterChipColors(
+                                selectedContainerColor = MaterialTheme.colorScheme.primaryContainer,
+                                selectedLabelColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                                containerColor = MaterialTheme.colorScheme.surface
+                            )
                         )
-                    )
+                    }
                 }
             }
 
             // --- Match Filter Chips ---
-            LazyRow(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 2.dp)
-            ) {
-                items(MatchFilter.entries.toTypedArray()) { matchFilter ->
-                    val isSelected = selectedMatchFilter == matchFilter
-                    FilterChip(
-                        selected = isSelected,
-                        onClick = { viewModel.onMatchFilterSelect(matchFilter) },
-                        label = { Text(text = matchFilter.label, fontSize = 12.sp) },
-                        colors = FilterChipDefaults.filterChipColors(
-                            selectedContainerColor = MaterialTheme.colorScheme.secondary,
-                            selectedLabelColor = MaterialTheme.colorScheme.onPrimary,
-                            containerColor = MaterialTheme.colorScheme.surface
-                        )
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.height(4.dp))
-
-            // --- Recipes List ---
-            if (filteredRecipes.isEmpty()) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(32.dp),
-                    contentAlignment = Alignment.Center
+            item {
+                LazyRow(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    contentPadding = PaddingValues(horizontal = 16.dp, vertical = 2.dp)
                 ) {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Icon(
-                            imageVector = Icons.Outlined.WineBar,
-                            contentDescription = null,
-                            modifier = Modifier.size(56.dp),
-                            tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
-                        )
-                        Spacer(modifier = Modifier.height(12.dp))
-                        Text(
-                            text = "No matching cocktails",
-                            style = MaterialTheme.typography.titleMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                        Text(
-                            text = "Try adding more ingredients to your bar or clearing search filters.",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                    items(MatchFilter.entries.toTypedArray()) { matchFilter ->
+                        val isSelected = selectedMatchFilter == matchFilter
+                        FilterChip(
+                            selected = isSelected,
+                            onClick = { viewModel.onMatchFilterSelect(matchFilter) },
+                            label = { Text(text = matchFilter.label, fontSize = 12.sp) },
+                            colors = FilterChipDefaults.filterChipColors(
+                                selectedContainerColor = MaterialTheme.colorScheme.secondary,
+                                selectedLabelColor = MaterialTheme.colorScheme.onPrimary,
+                                containerColor = MaterialTheme.colorScheme.surface
+                            )
                         )
                     }
                 }
+            }
+
+            // --- Recipes List ---
+            if (filteredRecipes.isEmpty()) {
+                item {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(32.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            Icon(
+                                imageVector = Icons.Outlined.WineBar,
+                                contentDescription = null,
+                                modifier = Modifier.size(56.dp),
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
+                            )
+                            Spacer(modifier = Modifier.height(12.dp))
+                            Text(
+                                text = "No matching cocktails",
+                                style = MaterialTheme.typography.titleMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                            Text(
+                                text = "Try adding more ingredients to your bar or clearing search filters.",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                    }
+                }
             } else {
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .consumeWindowInsets(innerPadding),
-                    contentPadding = PaddingValues(
-                        start = 16.dp,
-                        end = 16.dp,
-                        top = 8.dp,
-                        bottom = innerPadding.calculateBottomPadding() + 80.dp
-                    ),
-                    verticalArrangement = Arrangement.spacedBy(10.dp)
-                ) {
-                    items(
-                        items = filteredRecipes,
-                        key = { it.recipe.id }
-                    ) { item ->
+                items(
+                    items = filteredRecipes,
+                    key = { it.recipe.id }
+                ) { item ->
+                    Box(modifier = Modifier.padding(horizontal = 16.dp)) {
                         CocktailCard(
                             item = item,
                             onClick = { onSelectRecipe(item.recipe.id) },

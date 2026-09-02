@@ -30,7 +30,7 @@ enum class StockFilter(val label: String) {
  * Tabs for recipes screen.
  */
 enum class RecipeTab(val label: String) {
-    RECOMMENDED("Recommendations"),
+    RECOMMENDED("For You"),
     ALL("All Recipes"),
     FAVORITES("Favorites"),
     MY_CUSTOM("My Recipes")
