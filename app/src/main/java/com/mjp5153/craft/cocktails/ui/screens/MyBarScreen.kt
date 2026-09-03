@@ -92,6 +92,7 @@ fun MyBarScreen(
     val readyCount by viewModel.readyToMakeCount.collectAsStateWithLifecycle()
 
     var showClearConfirmation by remember { mutableStateOf(false) }
+    var showSelectAllConfirmation by remember { mutableStateOf(false) }
 
     LazyColumn(
         modifier = modifier
@@ -269,7 +270,7 @@ fun MyBarScreen(
 
                 Row {
                     IconButton(
-                        onClick = { viewModel.setAllStockForVisible(true) },
+                        onClick = { showSelectAllConfirmation = true },
                         modifier = Modifier.size(36.dp).testTag("select_all_visible_button")
                     ) {
                         Icon(
@@ -337,6 +338,36 @@ fun MyBarScreen(
                 }
             }
         }
+    }
+
+    // --- Select All Confirmation Dialog ---
+    if (showSelectAllConfirmation) {
+        AlertDialog(
+            onDismissRequest = { showSelectAllConfirmation = false },
+            title = {
+                Text(text = "Select All Visible?", fontWeight = FontWeight.Bold)
+            },
+            text = {
+                Text("Add all currently visible ingredients to your bar inventory?")
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        viewModel.setAllStockForVisible(true)
+                        showSelectAllConfirmation = false
+                    },
+                    modifier = Modifier.testTag("confirm_select_all_visible_button")
+                ) {
+                    Text("Select All")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showSelectAllConfirmation = false }) {
+                    Text("Cancel")
+                }
+            },
+            properties = DialogProperties(decorFitsSystemWindows = false)
+        )
     }
 
     // --- Clear All Confirmation Dialog ---

@@ -18,8 +18,8 @@ android {
     applicationId = "com.mjp5153.craft.cocktails"
     minSdk = 24
     targetSdk = 37
-    versionCode = 8
-    versionName = "1.2.0"
+    versionCode = 9
+    versionName = "1.2.1"
 
     ndk.debugSymbolLevel = "SYMBOL_TABLE"
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
